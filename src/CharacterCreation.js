@@ -5,24 +5,51 @@ const classes = {
   wizard: {
     name: 'Wizard',
     description: 'Master of arcane magic.',
+    modifiers: {
+      intelligence: 2,
+      wisdom: 1,
+    },
+    hitPoints: 6,
+    armorClass: 10,
+    startingSkills: ['Arcana', 'History'],
   },
   warrior: {
     name: 'Warrior',
     description: 'Mighty warrior skilled in combat.',
+    modifiers: {
+      strength: 2,
+      constitution: 1,
+    },
+    hitPoints: 10,
+    armorClass: 14,
+    startingSkills: ['Athletics', 'Intimidation'],
   },
   thief: {
     name: 'Thief',
     description: 'Stealthy rogue skilled in deception.',
+    modifiers: {
+      dexterity: 2,
+      charisma: 1,
+    },
+    hitPoints: 8,
+    armorClass: 12,
+    startingSkills: ['Stealth', 'Sleight of Hand'],
   },
   ranger: {
     name: 'Ranger',
     description: 'Skilled hunter and tracker of the wild.',
+    modifiers: {
+      dexterity: 1,
+      wisdom: 2,
+    },
+    hitPoints: 8,
+    armorClass: 13,
+    startingSkills: ['Survival', 'Nature'],
   },
 };
 
 const CharacterCreation = () => {
   const [selectedClass, setSelectedClass] = useState('wizard');
-  const [attributePoints, setAttributePoints] = useState(10);
   const [attributes, setAttributes] = useState({
     strength: 1,
     dexterity: 1,
@@ -34,11 +61,18 @@ const CharacterCreation = () => {
 
   const handleClassSelect = className => {
     setSelectedClass(className);
+    setAttributes({ ...attributes, ...classes[className].modifiers });
   };
 
-  const handleAttributeChange = (attribute, value) => {
-    const updatedAttributes = { ...attributes, [attribute]: value };
-    setAttributes(updatedAttributes);
+  const getTotalHitPoints = () => {
+    return classes[selectedClass].hitPoints + attributes.constitution;
+  };
+
+  const getTotalArmorClass = () => {
+    return (
+      classes[selectedClass].armorClass +
+      Math.floor((attributes.dexterity - 10) / 2)
+    );
   };
 
   return (
@@ -59,32 +93,24 @@ const CharacterCreation = () => {
       <div>
         <h3>{classes[selectedClass].name}</h3>
         <p>{classes[selectedClass].description}</p>
+        <p>
+          Starting Skills: {classes[selectedClass].startingSkills.join(', ')}
+        </p>
       </div>
       <div>
-        <h4>Attribute Points: {attributePoints}</h4>
+        <h4>Attributes</h4>
         {Object.keys(attributes).map(attribute => (
           <div key={attribute}>
             <span>
               {attribute}: {attributes[attribute]}
             </span>
-            <button
-              onClick={() =>
-                handleAttributeChange(attribute, attributes[attribute] + 1)
-              }
-              disabled={attributePoints === 0 || attributes[attribute] === 10}
-            >
-              +
-            </button>
-            <button
-              onClick={() =>
-                handleAttributeChange(attribute, attributes[attribute] - 1)
-              }
-              disabled={attributes[attribute] === 1}
-            >
-              -
-            </button>
           </div>
         ))}
+      </div>
+      <div>
+        <h4>Character Stats</h4>
+        <p>Hit Points: {getTotalHitPoints()}</p>
+        <p>Armor Class: {getTotalArmorClass()}</p>
       </div>
     </div>
   );
