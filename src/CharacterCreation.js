@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-
+import { armors } from './items/armors';
 // Define the classes
 const classes = {
   wizard: {
@@ -81,13 +81,12 @@ const CharacterCreation = () => {
   };
 
   const getTotalHitPoints = () => {
-    return classes[selectedClass].hitPoints + attributes.constitution;
+    return classes[selectedClass].hitPoints + attributes.constitution * 2;
   };
 
   const getTotalArmorClass = () => {
     return (
-      classes[selectedClass].armorClass +
-      Math.floor((attributes.dexterity - 10) / 2)
+      classes[selectedClass].armorClass + attributes.dexterity + armors.none
     );
   };
 
