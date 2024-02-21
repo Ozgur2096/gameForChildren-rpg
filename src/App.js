@@ -5,8 +5,8 @@ import Dice from './Dice';
 function App() {
   return (
     <div className='App'>
-      {/* <CharacterCreation /> */}
-      <Dice />
+      <CharacterCreation />
+      {/* <Dice /> */}
     </div>
   );
 }
