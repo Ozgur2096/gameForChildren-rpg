@@ -1,3 +1,6 @@
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faStar } from '@fortawesome/free-solid-svg-icons';
+
 import React, { useState } from 'react';
 import { armors } from './items/armors';
 // Define the classes
@@ -66,18 +69,15 @@ const classes = {
 
 const CharacterCreation = () => {
   const [selectedClass, setSelectedClass] = useState('wizard');
-  const [attributes, setAttributes] = useState({
-    strength: 1,
-    dexterity: 1,
-    constitution: 1,
-    intelligence: 1,
-    wisdom: 1,
-    charisma: 1,
-  });
+  const [attributes, setAttributes] = useState(classes.wizard.modifiers);
 
   const handleClassSelect = className => {
     setSelectedClass(className);
     setAttributes({ ...attributes, ...classes[className].modifiers });
+  };
+  const handleAttributeChange = (attribute, value) => {
+    const updatedAttributes = { ...attributes, [attribute]: value };
+    setAttributes(updatedAttributes);
   };
 
   const getTotalHitPoints = () => {
@@ -114,18 +114,35 @@ const CharacterCreation = () => {
       </div>
       <div>
         <h4>Attributes</h4>
+        <FontAwesomeIcon icon={faStar} />
+        <FontAwesomeIcon icon={faStar} />
+        <FontAwesomeIcon icon={faStar} />
         {Object.keys(attributes).map(attribute => (
           <div key={attribute}>
             <span>
               {attribute}: {attributes[attribute]}
             </span>
+            {/* Add + and - buttons for each attribute */}
+            <button
+              onClick={() =>
+                handleAttributeChange(attribute, attributes[attribute] + 1)
+              }
+            >
+              +
+            </button>
+            <button
+              onClick={() =>
+                handleAttributeChange(attribute, attributes[attribute] - 1)
+              }
+            >
+              -
+            </button>
           </div>
         ))}
       </div>
       <div>
-        <h4>Character Stats</h4>
-        <p>Hit Points: {getTotalHitPoints()}</p>
-        <p>Armor Class: {getTotalArmorClass()}</p>
+        <h4>Hit Points: {getTotalHitPoints()}</h4>
+        <h4>Armor Class: {getTotalArmorClass()}</h4>
       </div>
     </div>
   );
