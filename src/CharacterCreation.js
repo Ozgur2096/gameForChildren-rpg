@@ -1,71 +1,10 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar } from '@fortawesome/free-solid-svg-icons';
+import './CharacterCreation.css';
 
 import React, { useState } from 'react';
+import { classes } from './characterClasses';
 import { armors } from './items/armors';
-// Define the classes
-const classes = {
-  wizard: {
-    name: 'Wizard',
-    description: 'Master of arcane magic.',
-    modifiers: {
-      strength: 0,
-      dexterity: 0,
-      constitution: 0,
-      intelligence: 2,
-      wisdom: 1,
-      charisma: 1,
-    },
-    hitPoints: 6,
-    armorClass: 10,
-    startingSkills: ['Arcana', 'History'],
-  },
-  warrior: {
-    name: 'Warrior',
-    description: 'Mighty warrior skilled in combat.',
-    modifiers: {
-      strength: 2,
-      dexterity: 0,
-      constitution: 2,
-      intelligence: 0,
-      wisdom: 0,
-      charisma: 0,
-    },
-    hitPoints: 10,
-    armorClass: 14,
-    startingSkills: ['Athletics', 'Intimidation'],
-  },
-  thief: {
-    name: 'Thief',
-    description: 'Stealthy rogue skilled in deception.',
-    modifiers: {
-      strength: 0,
-      dexterity: 2,
-      constitution: 0,
-      intelligence: 0,
-      wisdom: 0,
-      charisma: 2,
-    },
-    hitPoints: 8,
-    armorClass: 12,
-    startingSkills: ['Stealth', 'Sleight of Hand'],
-  },
-  ranger: {
-    name: 'Ranger',
-    description: 'Skilled hunter and tracker of the wild.',
-    modifiers: {
-      strength: 1,
-      dexterity: 1,
-      constitution: 0,
-      intelligence: 0,
-      wisdom: 2,
-      charisma: 0,
-    },
-    hitPoints: 8,
-    armorClass: 13,
-    startingSkills: ['Survival', 'Nature'],
-  },
-};
 
 const CharacterCreation = () => {
   const [selectedClass, setSelectedClass] = useState('wizard');
@@ -76,6 +15,7 @@ const CharacterCreation = () => {
     setSelectedClass(className);
     setAttributes({ ...attributes, ...classes[className].modifiers });
   };
+
   const handleAttributeChange = (attribute, value) => {
     const updatedAttributes = { ...attributes, [attribute]: value };
     setAttributes(updatedAttributes);
@@ -92,10 +32,14 @@ const CharacterCreation = () => {
   };
 
   return (
-    <div>
+    <div className='character-creation-container'>
       <h2>Character Creation</h2>
+      <div className='name'>
+        <label htmlFor='name'>Character Name</label>
+        <input type='text' id='name' name='name' />
+      </div>
       <p>Select your class:</p>
-      <div>
+      <div className='class-selection'>
         {Object.keys(classes).map(className => (
           <button
             key={className}
@@ -109,55 +53,59 @@ const CharacterCreation = () => {
           </button>
         ))}
       </div>
-      <div>
+      <div className='class-details'>
         <h3>{classes[selectedClass].name}</h3>
         <p>{classes[selectedClass].description}</p>
         <p>
           Starting Skills: {classes[selectedClass].startingSkills.join(', ')}
         </p>
       </div>
-      <div>
+      <div className='attributes'>
         <h4>Attributes</h4>
-        <div>
+        <div className='stars'>
           {attributeStars.map((_, index) => (
-            <FontAwesomeIcon key={index} icon={faStar} />
+            <FontAwesomeIcon key={index} icon={faStar} className='star' />
           ))}
         </div>
         {Object.keys(attributes).map(attribute => (
-          <div key={attribute}>
+          <div key={attribute} className='attribute-row'>
             <span>
-              {attribute}:{' '}
-              {[...Array(attributes[attribute])].map((_, index) => (
-                <FontAwesomeIcon key={index} icon={faStar} />
-              ))}
+              <div className='attribute-name'>{attribute.toUpperCase()}</div>
+              <div>
+                {[...Array(attributes[attribute])].map((_, index) => (
+                  <FontAwesomeIcon key={index} icon={faStar} className='star' />
+                ))}
+              </div>
             </span>
             {/* Add + and - buttons for each attribute */}
-            {attributeStars.length > 0 ? (
-              <button
-                onClick={() => {
-                  handleAttributeChange(attribute, attributes[attribute] + 1);
-                  attributeStars.pop();
-                }}
-              >
-                +
-              </button>
-            ) : null}
-            {attributes[attribute] ? (
-              <button
-                onClick={() => {
-                  handleAttributeChange(attribute, attributes[attribute] - 1);
-                  attributeStars.push(1);
-                }}
-              >
-                -
-              </button>
-            ) : null}
+            <div>
+              {attributes[attribute] ? (
+                <button
+                  onClick={() => {
+                    handleAttributeChange(attribute, attributes[attribute] - 1);
+                    setAttributeStars([...attributeStars, 1]);
+                  }}
+                >
+                  -
+                </button>
+              ) : null}
+              {attributeStars.length > 0 ? (
+                <button
+                  onClick={() => {
+                    handleAttributeChange(attribute, attributes[attribute] + 1);
+                    attributeStars.pop();
+                  }}
+                >
+                  +
+                </button>
+              ) : null}
+            </div>
           </div>
         ))}
       </div>
       <div>
-        <h4>Hit Points: {getTotalHitPoints()}</h4>
-        <h4>Armor Class: {getTotalArmorClass()}</h4>
+        <h4 className='hit-points'>Hit Points: {getTotalHitPoints()}</h4>
+        <h4 className='armor-class'>Armor Class: {getTotalArmorClass()}</h4>
       </div>
     </div>
   );
