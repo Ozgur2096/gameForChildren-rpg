@@ -70,6 +70,7 @@ const classes = {
 const CharacterCreation = () => {
   const [selectedClass, setSelectedClass] = useState('wizard');
   const [attributes, setAttributes] = useState(classes.wizard.modifiers);
+  const [attributeStars, setAttributeStars] = useState([1, 2, 3]);
 
   const handleClassSelect = className => {
     setSelectedClass(className);
@@ -98,7 +99,10 @@ const CharacterCreation = () => {
         {Object.keys(classes).map(className => (
           <button
             key={className}
-            onClick={() => handleClassSelect(className)}
+            onClick={() => {
+              handleClassSelect(className);
+              setAttributeStars([1, 2, 3]);
+            }}
             disabled={className === selectedClass}
           >
             {classes[className].name}
@@ -114,29 +118,40 @@ const CharacterCreation = () => {
       </div>
       <div>
         <h4>Attributes</h4>
-        <FontAwesomeIcon icon={faStar} />
-        <FontAwesomeIcon icon={faStar} />
-        <FontAwesomeIcon icon={faStar} />
+        <div>
+          {attributeStars.map((_, index) => (
+            <FontAwesomeIcon key={index} icon={faStar} />
+          ))}
+        </div>
         {Object.keys(attributes).map(attribute => (
           <div key={attribute}>
             <span>
-              {attribute}: {attributes[attribute]}
+              {attribute}:{' '}
+              {[...Array(attributes[attribute])].map((_, index) => (
+                <FontAwesomeIcon key={index} icon={faStar} />
+              ))}
             </span>
             {/* Add + and - buttons for each attribute */}
-            <button
-              onClick={() =>
-                handleAttributeChange(attribute, attributes[attribute] + 1)
-              }
-            >
-              +
-            </button>
-            <button
-              onClick={() =>
-                handleAttributeChange(attribute, attributes[attribute] - 1)
-              }
-            >
-              -
-            </button>
+            {attributeStars.length > 0 ? (
+              <button
+                onClick={() => {
+                  handleAttributeChange(attribute, attributes[attribute] + 1);
+                  attributeStars.pop();
+                }}
+              >
+                +
+              </button>
+            ) : null}
+            {attributes[attribute] ? (
+              <button
+                onClick={() => {
+                  handleAttributeChange(attribute, attributes[attribute] - 1);
+                  attributeStars.push(1);
+                }}
+              >
+                -
+              </button>
+            ) : null}
           </div>
         ))}
       </div>
