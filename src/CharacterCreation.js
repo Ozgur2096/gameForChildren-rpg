@@ -5,6 +5,7 @@ import './CharacterCreation.css';
 import React, { useState } from 'react';
 import { classes } from './characterClasses';
 import { armors } from './items/armors';
+import { handleConfirm } from './util/handleConfirm';
 
 const CharacterCreation = () => {
   const [selectedClass, setSelectedClass] = useState('wizard');
@@ -107,6 +108,9 @@ const CharacterCreation = () => {
         <h4 className='hit-points'>Hit Points: {getTotalHitPoints()}</h4>
         <h4 className='armor-class'>Armor Class: {getTotalArmorClass()}</h4>
       </div>
+      <button className='confirm-button' onClick={handleConfirm}>
+        Confirm
+      </button>
     </div>
   );
 };
